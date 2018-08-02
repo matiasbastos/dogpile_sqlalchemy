@@ -70,6 +70,23 @@ regions['default'] = make_region(
             "filename": os.path.join(root, "cache.dbm")
         }
     )
+# configure the "redis" cache region.
+redis_address = '127.0.0.1'
+redis_port = 6379
+redis_db = 0
+redis_ttl = 60 * 60 * 2  # 2 hours
+regions['redis'] = make_region().configure(
+            'dogpile.cache.redis',
+            expiration_time=redis_ttl,
+            arguments={
+                'redis_expiration_time': redis_ttl,
+                'host': redis_address,
+                'port': redis_port,
+                'db': redis_db,
+                'distributed_lock': True,
+                'lock_timeout': (60 * 60 * 2),  # 2 hours
+            }
+        )
 
 # optional; call invalidate() on the region
 # once created so that all data is fresh when
